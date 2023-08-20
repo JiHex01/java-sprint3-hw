@@ -1,8 +1,8 @@
 public class Task {
 
     private long id;
-    private String name;
-    private String description;
+    private final String name;
+    private final String description;
     private Status status = Status.NEW;
 
     public Task(String name, String description) {
@@ -11,7 +11,9 @@ public class Task {
     }
 
     public enum Status {
-        DONE, IN_PROGRESS, NEW
+        DONE,
+        IN_PROGRESS,
+        NEW
     }
 
     public long getId() {
@@ -26,16 +28,8 @@ public class Task {
         return name;
     }
 
-    public void setName(String name) {
-        this.name = name;
-    }
-
     public String getDescription() {
         return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
     }
 
     public Status getStatus() {

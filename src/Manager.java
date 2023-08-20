@@ -20,14 +20,13 @@ public class Manager {
         return this.tasks.get(id);
     }
 
-    private long createTask(Task blueprint) {
+    private void createTask(Task blueprint) {
         var task = new Task(blueprint.getName(), blueprint.getDescription());
         task.setId(taskId++);
         update(task);
-        return task.getId();
     }
 
-    private long createEpic(Task blueprint, Subtask... subtasks) {
+    private void createEpic(Task blueprint, Subtask... subtasks) {
         var epic = new Epic(blueprint.getName(), blueprint.getDescription());
         epic.setId(taskId++);
         for (Subtask subtask : subtasks) {
@@ -36,7 +35,6 @@ public class Manager {
         }
 
         update(epic);
-        return epic.getId();
     }
 
     private long createSubtask(Task blueprint) {
@@ -70,11 +68,6 @@ public class Manager {
         }
     }
 
-
-
-    private List<Subtask> getSubtasks(Epic epic) {
-        return List.copyOf(epic.subtasks);
-    }
 
     private void setStatus(Task task, Task.Status status) {
         if (task instanceof Epic) return;

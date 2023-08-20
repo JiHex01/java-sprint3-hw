@@ -83,7 +83,7 @@ public class Manager {
             System.out.println(task);
             System.out.println();
         }
-        System.out.println("----- Task list end -----");
+        System.out.println("-----Task list end -----");
         System.out.println();
     }
 

@@ -4,6 +4,7 @@ public class Subtask extends Task {
 
     public Subtask(String name, String description) {
         super(name, description);
+
     }
 
     public Epic getEpic() {
@@ -17,9 +18,9 @@ public class Subtask extends Task {
     @Override
     public String toString() {
         return String.format(
-                "%s\nEpic: %d",
+                "%s\nEpic: %s",
                 super.toString(),
-                epic.getId()
+                epic != null ? epic.getId() : "null"
         );
     }
 }

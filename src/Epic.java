@@ -1,13 +1,25 @@
-import java.util.Arrays;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
+
+import java.util.*;
 
 public class Epic extends Task {
 
-    public final List<Subtask> subtasks = new LinkedList<>();
+    private final Set<Subtask> subtasks = new LinkedHashSet<>();
 
     public Epic(String name, String description) {
         super(name, description);
+    }
+
+    public void addSubtask(Subtask subtask) {
+        subtasks.add(subtask);
+    }
+
+    public void removeSubtask(Subtask subtask) {
+        subtasks.remove(subtask);
+    }
+
+    public Subtask[] getSubtasks() {
+        return subtasks.toArray(Subtask[]::new);
     }
 
     @Override
@@ -19,4 +31,3 @@ public class Epic extends Task {
         );
     }
 }
-

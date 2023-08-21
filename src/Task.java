@@ -10,11 +10,7 @@ public class Task {
         this.description = description;
     }
 
-    public enum Status {
-        DONE,
-        IN_PROGRESS,
-        NEW
-    }
+
 
     public long getId() {
         return id;

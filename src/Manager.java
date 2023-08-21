@@ -20,8 +20,8 @@ public class Manager {
         return this.tasks.get(id);
     }
 
-    private void createTask(Task blueprint) {
-        var task = new Task(blueprint.getName(), blueprint.getDescription());
+    private void createTask(Task Objective) {
+        var task = new Task(Objective.getName(), Objective.getDescription());
         task.setId(taskId++);
         update(task);
     }
@@ -47,29 +47,31 @@ public class Manager {
     private void update(Task task) {
         tasks.put(task.getId(), task);
 
-        if (task.getClass() == Subtask.class && ((Subtask) task).getEpic() != null) {
+        if (task instanceof Subtask && ((Subtask) task).getEpic() != null) {
             Subtask subtask = (Subtask) task;
             var epic = subtask.getEpic();
+            boolean allDone = true;
 
             for (Subtask subtask1 : epic.subtasks) {
-                if (subtask1.getStatus().equals(Task.Status.NEW))
-                    continue;
+                if (subtask1.getStatus().equals(Status.NEW)) {
+                    epic.setStatus(Status.IN_PROGRESS);
+                    break;
+                }
 
-                epic.setStatus(Task.Status.IN_PROGRESS);
-                break;
+                if (!subtask1.getStatus().equals(Status.DONE)) {
+                    allDone = false;
+                    break;
+                }
             }
 
-            for (Subtask subtask1 : epic.subtasks) {
-                if (!subtask1.getStatus().equals(Task.Status.DONE))
-                    break;
-
-                epic.setStatus(Task.Status.DONE);
+            if (allDone) {
+                epic.setStatus(Status.DONE);
             }
         }
     }
 
 
-    private void setStatus(Task task, Task.Status status) {
+    private void setStatus(Task task, Status status) {
         if (task instanceof Epic) return;
 
         task.setStatus(status);
@@ -106,9 +108,9 @@ public class Manager {
 
 
         manager.printAll();
-        manager.getAll().forEach(task -> manager.setStatus(task, Task.Status.IN_PROGRESS));
+        manager.getAll().forEach(task -> manager.setStatus(task, Status.IN_PROGRESS));
         manager.printAll();
-        manager.getAll().forEach(task -> manager.setStatus(task, Task.Status.DONE));
+        manager.getAll().forEach(task -> manager.setStatus(task, Status.DONE));
         manager.printAll();
     }
 }

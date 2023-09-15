@@ -14,6 +14,9 @@ public class Subtask extends Task {
     public void setEpic(Epic epic) {
         this.epic = epic;
     }
+    public long getEpicId() {
+        return epic != null ? epic.getId() : -1;
+    }
 
     @Override
     public String toString() {

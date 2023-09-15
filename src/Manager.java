@@ -1,7 +1,4 @@
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Manager {
 
@@ -68,12 +65,44 @@ public class Manager {
         }
     }
 
-    private void update(Epic epic) {
-        update((Task) epic);
+    private void updateEpicName(Epic epic, String name) {
+        epic.setName(name);
+        update(epic);
     }
 
-    private void deleteById(long id) {
-        this.tasks.remove(id);
+    private void updateEpicDescription(Epic epic, String description) {
+        epic.setDescription(description);
+        update(epic);
+    }
+
+    private void deleteTaskById(long id) {
+        Task task = tasks.get(id);
+        if (task instanceof Epic) {
+            deleteEpicById(id);
+        } else if (task instanceof Subtask) {
+            deleteSubtaskById(id);
+        } else {
+            tasks.remove(id);
+        }
+    }
+
+    private void deleteEpicById(long id) {
+        Epic epic = (Epic) tasks.remove(id);
+        if (epic != null) {
+            for (Subtask subtask : epic.getSubtasks()) {
+                deleteSubtaskById(subtask.getId());
+            }
+        }
+    }
+
+    private void deleteSubtaskById(long id) {
+        Subtask subtask = (Subtask) tasks.remove(id);
+        if (subtask != null) {
+            Epic epic = (Epic) tasks.get(subtask.getEpicId());
+            if (epic != null) {
+                epic.removeSubtask(subtask);
+            }
+        }
     }
 
     private Subtask[] getSubtasks(Epic epic) {
@@ -86,16 +115,66 @@ public class Manager {
         task.setStatus(status);
         update(task);
     }
+    public List<Task> getAllTasks() {
+        return new LinkedList<>(tasks.values());
+    }
 
-    void printAll() {
-        System.out.println();
-        System.out.println("----- Tasks list start -----");
-        for (Task task : getAll()) {
-            System.out.println(task);
-            System.out.println();
+    public List<Epic> getAllEpics() {
+        List<Epic> epics = new LinkedList<>();
+        for (Task task : tasks.values()) {
+            if (task instanceof Epic) {
+                epics.add((Epic) task);
+            }
         }
-        System.out.println("----- Task list end -----");
-        System.out.println();
+        return epics;
+    }
+
+    public List<Subtask> getAllSubtasks() {
+        List<Subtask> subtasks = new LinkedList<>();
+        for (Task task : tasks.values()) {
+            if (task instanceof Subtask) {
+                subtasks.add((Subtask) task);
+            }
+        }
+        return subtasks;
+    }
+
+    public List<Subtask> getAllEpicSubtasks(Epic epic) {
+        List<Subtask> epicSubtasks = new LinkedList<>();
+        Collections.addAll(epicSubtasks, epic.getSubtasks());
+        return epicSubtasks;
+    }
+
+    public List<String> printAll() {
+        List<String> taskStrings = new ArrayList<>();
+        taskStrings.add("----- Tasks list start -----");
+
+        taskStrings.add("All Tasks:");
+        List<Task> tasks = getAllTasks();
+        for (Task task : tasks) {
+            taskStrings.add(task.toString());
+        }
+
+        taskStrings.add("All Epics:");
+        List<Epic> epics = getAllEpics();
+        for (Epic epic : epics) {
+            taskStrings.add(epic.toString());
+            taskStrings.add("All Subtasks for Epic " + epic.getId() + ":");
+            List<Subtask> epicSubtasks = getAllEpicSubtasks(epic);
+            for (Subtask subtask : epicSubtasks) {
+                taskStrings.add(subtask.toString());
+            }
+        }
+
+        taskStrings.add("All Subtasks:");
+        List<Subtask> subtasks = getAllSubtasks();
+        for (Subtask subtask : subtasks) {
+            taskStrings.add(subtask.toString());
+        }
+
+        taskStrings.add("----- Task list end -----");
+
+        return taskStrings;
     }
 
 
